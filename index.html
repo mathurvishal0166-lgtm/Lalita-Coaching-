@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="hi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lalita Coaching Classes - Nursery to 8th Class Tuition</title>
+  <meta name="description" content="Premier kids tuition & coaching center for Nursery to 8th Class supporting NCERT & UP Board curriculums. Near Shagun Junior High School, New Kot Gaon, Ghaziabad." />
+  
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body {
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
+      font-family: 'Poppins', system-ui, sans-serif;
+    }
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-800 antialiased selection:bg-purple-100 selection:text-purple-900">
+
+  <!-- ========================================== -->
+  <!-- SIMULATED SMS OTP TOAST NOTIFICATION -->
+  <!-- ========================================== -->
+  <div id="otp-toast" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-[70] w-11/12 max-w-md bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-start justify-between gap-3">
+    <div class="flex items-start gap-3">
+      <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center shrink-0 text-white">
+        <i class="fa-solid fa-comment-sms text-base"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-xs uppercase text-purple-300">LALITA COACHING OTP</span>
+          <span class="text-[10px] text-slate-400">Just now</span>
+        </div>
+        <p class="text-sm font-semibold text-white mt-0.5">
+          Your verification OTP is <strong id="toast-otp-code" class="text-amber-400 font-mono text-base tracking-wider">7492</strong>
+        </p>
+        <p class="text-[11px] text-slate-300 mt-1">Valid for 5 minutes. Tap button to auto-fill.</p>
+      </div>
+    </div>
+    <div class="flex flex-col gap-1.5 shrink-0">
+      <button onclick="autoFillOtp()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">
+        Auto Fill
+      </button>
+      <button onclick="dismissOtpToast()" class="text-slate-400 hover:text-white text-xs text-center">
+        Dismiss
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- INITIAL MANDATORY LOGIN GATE MODAL -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white p-6 text-center relative">
+        <div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white text-2xl mx-auto mb-3 shadow-md">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2 class="text-xl font-extrabold tracking-tight">Lalita Coaching Classes</h2>
+        <p class="text-xs text-purple-100 mt-1">Near Shagun Junior High School, New Kot Gaon, Ghaziabad</p>
+        <div class="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-[11px] font-semibold text-white">
+          <i class="fa-solid fa-lock text-amber-300"></i>
+          <span>कृपया आगे बढ़ने के लिए लॉगिन करें (Login to Continue)</span>
+        </div>
+        <button id="modal-close-btn" onclick="closeAuthModal()" class="hidden absolute top-4 right-4 text-white/80 hover:text-white p-2 text-sm" aria-label="Close">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-5">
+        
+        <!-- Tabs -->
+        <div class="flex rounded-xl bg-slate-100 p-1">
+          <button id="tab-phone-btn" onclick="switchAuthTab('phone')" class="flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-purple-700 shadow-xs">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <span>Mobile & OTP</span>
+          </button>
+          <button id="tab-google-btn" onclick="switchAuthTab('google')" class="flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
+            <i class="fa-brands fa-google text-red-500"></i>
+            <span>Google ID</span>
+          </button>
+          <button id="tab-facebook-btn" onclick="switchAuthTab('facebook')" class="flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
+            <i class="fa-brands fa-facebook text-blue-600"></i>
+            <span>Facebook ID</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: PHONE & OTP -->
+        <div id="auth-panel-phone" class="space-y-4">
+          <!-- Step 1: Input Phone & Name -->
+          <form id="phone-step-1" onsubmit="handleSendOtp(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Parent / Student Name (नाम) *</label>
+              <input type="text" id="phone-name-input" required placeholder="उदा. विशाल माथुर (Vishal Mathur)" class="w-full px-3.5 py-2.5 text-base rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-600/30 bg-slate-50/50" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number (10 अंकों का फोन नंबर) *</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400">+91</span>
+                <input type="tel" id="phone-num-input" required maxlength="10" placeholder="98106 50542" class="w-full pl-12 pr-3.5 py-2.5 text-base rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-600/30 bg-slate-50/50" />
+              </div>
+            </div>
+            <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-purple-600 hover:bg-purple-700 text-white shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+              <span>Send OTP (ओटीपी भेजें)</span>
+            </button>
+          </form>
+
+          <!-- Step 2: Verify OTP -->
+          <form id="phone-step-2" onsubmit="handleVerifyOtp(event)" class="hidden space-y-4">
+            <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 flex items-center justify-between text-xs">
+              <div>
+                <p class="text-purple-900 font-medium">OTP sent to: <strong id="display-sent-phone">+91 9810650542</strong></p>
+                <p class="text-[11px] text-purple-700">Code is displayed in top alert.</p>
+              </div>
+              <button type="button" onclick="backToPhoneStep1()" class="text-purple-700 underline font-semibold text-xs">
+                Change
+              </button>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-bold text-slate-700">Enter 4-Digit OTP (ओटीपी दर्ज करें) *</label>
+                <button type="button" onclick="autoFillOtp()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700">
+                  Auto-fill code
+                </button>
+              </div>
+              <input type="text" id="otp-input-field" required maxlength="4" placeholder="4-digit code" class="w-full text-center tracking-[0.5em] font-mono text-xl py-3 rounded-xl border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-600/30 bg-white" />
+            </div>
+            <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Verify & Enter Portal (सत्यापित करें)</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB 2: GOOGLE ID CHOOSER -->
+        <div id="auth-panel-google" class="hidden space-y-4">
+          <div class="p-3 bg-red-50/70 border border-red-100 rounded-2xl">
+            <p class="text-xs font-bold text-red-900 flex items-center gap-1.5 mb-1">
+              <i class="fa-brands fa-google text-red-500"></i>
+              <span>आप किस Google ID से लॉगिन करना चाहते हैं?</span>
+            </p>
+            <p class="text-[11px] text-red-700">Choose an account below or type your personal Gmail ID:</p>
+          </div>
+
+          <form onsubmit="handleGoogleLogin(event)" class="space-y-2.5">
+            <label class="flex items-center justify-between p-3 rounded-xl border border-purple-500 bg-purple-50/60 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="google-radio" value="mathurvishal0166@gmail.com" checked onchange="toggleGoogleCustom(false)" class="text-purple-600" />
+                <div>
+                  <p class="text-xs font-bold text-slate-900">Vishal Mathur</p>
+                  <p class="text-[11px] text-slate-500 font-mono">mathurvishal0166@gmail.com</p>
+                </div>
+              </div>
+              <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Developer</span>
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="google-radio" value="priya.parent@gmail.com" onchange="toggleGoogleCustom(false)" class="text-purple-600" />
+                <div>
+                  <p class="text-xs font-bold text-slate-900">Priya Sharma</p>
+                  <p class="text-[11px] text-slate-500 font-mono">priya.parent@gmail.com</p>
+                </div>
+              </div>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">Parent</span>
+            </label>
+
+            <!-- Custom Google ID -->
+            <div class="p-3 rounded-xl border border-slate-200 bg-white">
+              <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+                <input type="radio" name="google-radio" value="custom" onchange="toggleGoogleCustom(true)" class="text-purple-600" />
+                <span>Use Another Google Account (कोई अन्य Google ID)</span>
+              </label>
+              <div id="google-custom-box" class="hidden space-y-2 mt-2 pt-2 border-t border-slate-100">
+                <input type="email" id="google-custom-email" placeholder="yourname@gmail.com" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white" />
+                <input type="text" id="google-custom-name" placeholder="Your Full Name (आपका नाम)" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white" />
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-purple-600 hover:bg-purple-700 text-white shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-3">
+              <i class="fa-brands fa-google"></i>
+              <span>Confirm & Login with this Google ID</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB 3: FACEBOOK ID CHOOSER -->
+        <div id="auth-panel-facebook" class="hidden space-y-4">
+          <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-2xl">
+            <p class="text-xs font-bold text-blue-900 flex items-center gap-1.5 mb-1">
+              <i class="fa-brands fa-facebook text-blue-600"></i>
+              <span>आप किस Facebook ID से लॉगिन करना चाहते हैं?</span>
+            </p>
+            <p class="text-[11px] text-blue-700">Choose an account below or type your Facebook Username / Mobile:</p>
+          </div>
+
+          <form onsubmit="handleFacebookLogin(event)" class="space-y-2.5">
+            <label class="flex items-center justify-between p-3 rounded-xl border border-blue-500 bg-blue-50/60 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="fb-radio" value="vishal.mathur.fb" checked onchange="toggleFacebookCustom(false)" class="text-blue-600" />
+                <div>
+                  <p class="text-xs font-bold text-slate-900">Vishal Mathur</p>
+                  <p class="text-[11px] text-slate-500 font-mono">fb.com/vishal.mathur</p>
+                </div>
+              </div>
+            </label>
+
+            <!-- Custom FB ID -->
+            <div class="p-3 rounded-xl border border-slate-200 bg-white">
+              <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+                <input type="radio" name="fb-radio" value="custom" onchange="toggleFacebookCustom(true)" class="text-blue-600" />
+                <span>Enter Custom Facebook ID / Phone / Email</span>
+              </label>
+              <div id="fb-custom-box" class="hidden space-y-2 mt-2 pt-2 border-t border-slate-100">
+                <input type="text" id="fb-custom-id" placeholder="Facebook username / Mobile" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white" />
+                <input type="text" id="fb-custom-name" placeholder="Your Full Name (आपका नाम)" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white" />
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-[#1877F2] hover:bg-blue-700 text-white shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-3">
+              <i class="fa-brands fa-facebook-f"></i>
+              <span>Confirm & Login with this Facebook ID</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-emerald-500"></i>
+          <span>Safe & Secure Login for Lalita Coaching Parents</span>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- TOP NOTIFICATION STRIP & DEVELOPER CREDIT -->
+  <!-- ========================================== -->
+  <div class="bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-800 text-white text-xs sm:text-sm py-2 px-4 shadow-inner">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5 text-center md:text-left">
+      <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+        <span class="bg-amber-400 text-slate-950 font-extrabold px-3 py-0.5 rounded-full text-[11px] inline-flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-code text-[10px]"></i>
+          <span>Developed by Vishal Mathur</span>
+        </span>
+        <span class="hidden sm:inline text-white/40">•</span>
+        <span class="font-medium text-xs text-purple-100">
+          Near Shagun Junior High School, New Kot Gaon, Ghaziabad
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 text-purple-100 text-xs">
+        <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="hover:text-white transition flex items-center gap-1.5 font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded-full shadow-xs">
+          <i class="fa-brands fa-whatsapp text-white text-xs"></i>
+          <span>WhatsApp: 9810650542</span>
+        </a>
+        <span class="hidden lg:inline text-white/40">|</span>
+        <a href="tel:+919810650542" class="hidden lg:flex items-center gap-1 hover:text-white transition">
+          <i class="fa-solid fa-phone text-amber-300 text-xs"></i>
+          <span>Call: 9810650542</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- HEADER & NAVIGATION -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-purple-500/20">
+          <i class="fa-solid fa-graduation-cap text-2xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900">
+              Lalita <span class="text-purple-600">Coaching</span>
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+          </div>
+          <p class="text-[11px] font-medium text-slate-500 tracking-wide">
+            NEW KOT GAON, GHAZIABAD · NURSERY TO 8TH
+          </p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-6 font-medium text-sm text-slate-600">
+        <a href="#home" class="text-purple-600 font-semibold hover:text-purple-700 transition">Home</a>
+        <a href="#about" class="hover:text-purple-600 transition">About Us</a>
+        <a href="#boards-classes" class="hover:text-purple-600 transition">Boards & Classes</a>
+        <a href="#study-examples" class="text-purple-700 font-bold hover:text-purple-900 transition flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50">
+          <i class="fa-solid fa-book-open-reader text-purple-600"></i>
+          <span>Padhai Examples</span>
+        </a>
+        <a href="#slogans-section" class="hover:text-purple-600 transition">Slogans</a>
+        <a href="#contact-admissions" class="hover:text-purple-600 transition">Call & Contact</a>
+      </nav>
+
+      <!-- Right Buttons / Account Profile -->
+      <div class="hidden sm:flex items-center gap-3">
+        <div id="user-profile-badge" class="hidden flex items-center gap-2.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full">
+          <span class="w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">
+            <i class="fa-solid fa-user"></i>
+          </span>
+          <div class="text-left leading-tight pr-1">
+            <p id="user-badge-name" class="text-xs font-bold text-slate-900 truncate max-w-[110px]">Parent</p>
+            <p class="text-[10px] text-emerald-600 font-semibold">Verified</p>
+          </div>
+          <button onclick="handleLogout()" title="Logout" class="w-6 h-6 rounded-full bg-slate-200 hover:bg-red-100 hover:text-red-600 text-slate-500 flex items-center justify-center transition text-[11px]">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+
+        <button id="login-open-btn" onclick="openAuthModal()" class="px-4 py-2 rounded-full font-bold text-xs bg-slate-100 hover:bg-purple-50 text-purple-700 border border-purple-200 transition cursor-pointer flex items-center gap-1.5">
+          <i class="fa-solid fa-user-lock"></i>
+          <span>Login</span>
+        </button>
+
+        <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="px-4 py-2.5 rounded-full font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition cursor-pointer flex items-center gap-1.5">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>WhatsApp: 9810650542</span>
+        </a>
+      </div>
+
+      <!-- Hamburger -->
+      <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-6 py-5 shadow-xl">
+      <nav class="flex flex-col gap-3 text-base font-medium text-slate-700">
+        <a href="#home" onclick="toggleMobileMenu()" class="text-purple-600 font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-house w-5"></i> Home
+        </a>
+        <a href="#about" onclick="toggleMobileMenu()" class="flex items-center gap-2">
+          <i class="fa-solid fa-heart text-pink-500 w-5"></i> About Us
+        </a>
+        <a href="#boards-classes" onclick="toggleMobileMenu()" class="flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-sky-500 w-5"></i> Boards & Classes
+        </a>
+        <a href="#study-examples" onclick="toggleMobileMenu()" class="font-bold text-purple-700 flex items-center gap-2">
+          <i class="fa-solid fa-book-open-reader text-purple-600 w-5"></i> Padhai Ke Examples
+        </a>
+        <a href="#slogans-section" onclick="toggleMobileMenu()" class="flex items-center gap-2">
+          <i class="fa-solid fa-quote-left text-amber-500 w-5"></i> Padhai Slogans
+        </a>
+        <a href="#contact-admissions" onclick="toggleMobileMenu()" class="flex items-center gap-2">
+          <i class="fa-solid fa-phone text-emerald-500 w-5"></i> Direct Call & Location
+        </a>
+        <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+          <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="w-full py-3 rounded-xl font-bold text-center bg-emerald-600 text-white shadow-md flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp: 9810650542
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- SLOGANS CAROUSEL BANNER -->
+  <!-- ========================================== -->
+  <section id="slogans-section" class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white py-4 px-4 overflow-hidden border-b border-purple-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 shrink-0">
+        <span class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-sm">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </span>
+        <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-400">
+          पढ़ाई के प्रेरणादायक स्लोगन (Education Slogans)
+        </p>
+      </div>
+
+      <div class="flex-1 text-center sm:text-left px-2">
+        <p id="slogan-display" class="text-xs sm:text-sm font-semibold text-purple-100">
+          <i class="fa-solid fa-quote-left text-amber-400 text-xs"></i>
+          <span>शिक्षा वह शेरनी का दूध है जो पिएगा वो दहाड़ेगा!</span>
+          <span class="text-amber-300 font-bold">— डॉ. बी.आर. अम्बेडकर</span>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button onclick="prevSlogan()" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-xs">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button onclick="nextSlogan()" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-xs">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- HERO SECTION -->
+  <!-- ========================================== -->
+  <section id="home" class="relative pt-10 sm:pt-16 pb-20 sm:pb-28 bg-gradient-to-b from-white via-purple-50/20 to-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left Column -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-purple-100/90 border border-purple-200/80 text-purple-900 text-xs sm:text-sm font-semibold">
+            <i class="fa-solid fa-location-dot text-purple-600"></i>
+            <span>Near Shagun Junior High School, New Kot Gaon, Ghaziabad</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+            Global Learning Experience for 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500">
+              Nursery to 8th Class
+            </span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+            We provide expert coaching for both <strong className="text-slate-800">UP Board</strong> and <strong className="text-slate-800">NCERT Board</strong> students. Direct WhatsApp & Call support for fee details, batch timings, and admission guidance.
+          </p>
+
+          <!-- WhatsApp Box -->
+          <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-200/80 max-w-xl mx-auto lg:mx-0">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <i class="fa-brands fa-whatsapp text-lg"></i>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-emerald-900 uppercase tracking-wide">
+                    WhatsApp & Call Information Helpline
+                  </p>
+                  <p class="text-xs text-emerald-800 font-medium">
+                    Instant fee & batch details on WhatsApp <strong>9810650542</strong>
+                  </p>
+                </div>
+              </div>
+              <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+                <span>9810650542</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30 transition flex items-center justify-center gap-3">
+              <i class="fa-brands fa-whatsapp text-xl"></i>
+              <span>WhatsApp: 9810650542</span>
+            </a>
+            <a href="#study-examples" class="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base bg-purple-600 hover:bg-purple-700 text-white shadow-md transition flex items-center justify-center gap-2.5">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Dekhiye Padhai Ke Examples</span>
+            </a>
+          </div>
+
+          <!-- Trust Counters -->
+          <div class="pt-6 border-t border-slate-100 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0">
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-purple-600">500+</p>
+              <p class="text-xs text-slate-500 font-medium">Students Mentored</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-emerald-600">100%</p>
+              <p class="text-xs text-slate-500 font-medium">Concept Clarity</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-sky-600">Ghaziabad</p>
+              <p class="text-xs text-slate-500 font-medium">New Kot Gaon Center</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Kids Illustration on Stack of Books -->
+        <div class="lg:col-span-5 relative flex items-center justify-center">
+          <div class="relative w-full max-w-md sm:max-w-lg bg-white rounded-3xl p-6 sm:p-8 border border-purple-100 shadow-xl">
+            <div class="absolute -top-3 -left-3 bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md flex items-center gap-1.5">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp: 9810650542</span>
+            </div>
+
+            <div class="relative w-full aspect-square max-h-[380px] sm:max-h-[420px] rounded-2xl overflow-hidden bg-gradient-to-b from-sky-50 via-indigo-50/50 to-purple-50/60 flex items-center justify-center p-4">
+              <svg viewBox="0 0 500 500" class="w-full h-full select-none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#E0E7FF" stopOpacity="0.6" />
+                  </linearGradient>
+                  <linearGradient id="bookPurple" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#7C3AED" />
+                    <stop offset="100%" stopColor="#9333EA" />
+                  </linearGradient>
+                </defs>
+                <circle cx="250" cy="220" r="160" fill="url(#skyGrad)" />
+                <circle cx="390" cy="90" r="28" fill="#FDE047" opacity="0.8" />
+                <path d="M70,110 Q90,90 115,105 Q140,90 155,115 Q170,135 145,145 Q80,150 70,110 Z" fill="#FFFFFF" opacity="0.85" />
+                <!-- Books -->
+                <rect x="75" y="440" width="350" height="25" fill="url(#bookPurple)" rx="4" />
+                <text x="120" y="457" fill="#FFFFFF" font-size="11" font-weight="bold">NCERT & UP BOARD MATHEMATICS</text>
+                <rect x="95" y="410" width="310" height="24" fill="#059669" rx="4" />
+                <text x="140" y="426" fill="#FFFFFF" font-size="10" font-weight="bold">SCIENCE & VIGYAN EXPLORER</text>
+                <rect x="115" y="380" width="270" height="24" fill="#EA580C" rx="4" />
+                <text x="150" y="396" fill="#FFFFFF" font-size="10" font-weight="bold">UP BOARD · हिन्दी व्याकरण</text>
+                <!-- Happy Kids -->
+                <circle cx="200" cy="280" r="28" fill="#FBCFE8" />
+                <circle cx="193" cy="275" r="3" fill="#1E293B" />
+                <circle cx="207" cy="275" r="3" fill="#1E293B" />
+                <path d="M 195,290 Q 200,296 205,290" stroke="#DB2777" stroke-width="2.5" fill="none" />
+                <path d="M 175,308 L 225,308 L 235,360 L 165,360 Z" fill="#7C3AED" />
+
+                <circle cx="290" cy="275" r="28" fill="#FDE68A" />
+                <circle cx="283" cy="270" r="3" fill="#1E293B" />
+                <circle cx="297" cy="270" r="3" fill="#1E293B" />
+                <path d="M 285,285 Q 290,292 295,285" stroke="#B45309" stroke-width="2.5" fill="none" />
+                <rect x="270" y="303" width="40" height="57" rx="6" fill="#F59E0B" />
+              </svg>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+              <span class="flex items-center gap-1.5 text-purple-700 font-semibold">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Kindergarten & Primary Care
+              </span>
+              <span>Nursery to 8th Class</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Multi-layered bottom wave -->
+    <div class="absolute bottom-0 left-0 right-0 w-full overflow-hidden leading-none z-0">
+      <svg class="relative block w-full h-16 sm:h-24 md:h-32" viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none">
+        <path d="M0,32 C320,85 480,10 720,50 C960,90 1200,20 1440,65 L1440,120 L0,120 Z" fill="#E0F2FE" opacity="0.85" />
+        <path d="M0,55 C240,15 480,80 720,40 C960,5 1200,75 1440,35 L1440,120 L0,120 Z" fill="#A7F3D0" opacity="0.8" />
+        <path d="M0,75 C360,110 600,45 840,85 C1080,120 1320,60 1440,80 L1440,120 L0,120 Z" fill="#38BDF8" opacity="0.55" />
+        <path d="M0,90 C300,60 600,105 900,80 C1200,55 1350,95 1440,90 L1440,120 L0,120 Z" fill="#FFFFFF" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- ABOUT SECTION -->
+  <!-- ========================================== -->
+  <section id="about" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-5 relative">
+          <div class="relative rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-100">
+            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80" alt="Students learning" class="w-full h-80 object-cover" />
+            <div class="p-5 bg-white space-y-1">
+              <span class="text-xs text-emerald-600 font-bold">Active Coaching Daily</span>
+              <p class="font-bold text-slate-800 text-sm">Near Shagun Junior High School, New Kot Gaon, Ghaziabad</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+            <i class="fa-solid fa-seedling"></i>
+            <span>About Lalita Coaching Classes</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight">
+            We Learn Smart Way To Build Bright Future For Your Children
+          </h2>
+
+          <p class="text-base text-slate-600 leading-relaxed">
+            Located near <strong class="text-slate-900">Shagun Junior High School in New Kot Gaon, Ghaziabad</strong>, Lalita Coaching Classes bridges traditional school pressure with joyful, structured concept mastery. Supporting children from <strong class="text-slate-900">Nursery to 8th Class</strong> across both NCERT and UP Board curriculums.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <i class="fa-solid fa-brain text-purple-600 text-lg mb-2"></i>
+              <h3 class="font-bold text-slate-900 text-sm">Concept over Memorization</h3>
+              <p class="text-xs text-slate-500 mt-1">Interactive math counters and phonics games eliminate exam fear.</p>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+              <i class="fa-brands fa-whatsapp text-emerald-600 text-lg mb-2"></i>
+              <h3 class="font-bold text-slate-900 text-sm">WhatsApp Helpline</h3>
+              <p class="text-xs text-slate-500 mt-1">Directly chat with teacher at <strong>9810650542</strong> for fees and batches.</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-md">
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+              <span>WhatsApp: 9810650542</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- PADHAI KE EXAMPLES (SAMPLE LESSONS) -->
+  <!-- ========================================== -->
+  <section id="study-examples" class="py-20 bg-slate-50 border-y border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+        <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-purple-700 bg-purple-100 px-3.5 py-1.5 rounded-full border border-purple-200">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <span>Padhai Ke Examples (Sample Lessons)</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Dekhiye Hum Baccho Ko Kaise Padhaate Hain
+        </h2>
+        <p class="text-base text-slate-600">
+          Real classroom examples from Nursery through 8th Class. Click on any category below:
+        </p>
+
+        <!-- Category Tabs -->
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <button onclick="switchStudyTab('math')" id="study-tab-math" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 text-white shadow-md">
+            Maths Mental Tricks
+          </button>
+          <button onclick="switchStudyTab('science')" id="study-tab-science" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 hover:bg-slate-100 border">
+            Science Visual Notes
+          </button>
+          <button onclick="switchStudyTab('english')" id="study-tab-english" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 hover:bg-slate-100 border">
+            Nursery Phonics
+          </button>
+          <button onclick="switchStudyTab('hindi')" id="study-tab-hindi" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 hover:bg-slate-100 border">
+            UP Board हिन्दी व्याकरण
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: Math -->
+      <div id="study-content-math" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-6 sm:p-10 border border-purple-100 shadow-md">
+        <div class="lg:col-span-6 space-y-4">
+          <span class="text-xs font-bold text-purple-700 bg-purple-100 px-3 py-1 rounded-full">Class 3rd to 5th Arithmetic</span>
+          <h3 class="text-2xl font-extrabold text-slate-900">Fast Addition Without Finger Counting</h3>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            We teach friendly number rounding (मित्र संख्या विधि) so kids calculate in their heads in 2 seconds.
+          </p>
+          <div class="p-4 bg-purple-50 rounded-2xl border border-purple-200">
+            <p class="text-xs text-purple-800 font-bold uppercase">The Question</p>
+            <p class="text-xl font-black text-purple-900 font-mono mt-1">48 + 37 = ?</p>
+          </div>
+          <button onclick="toggleMathStep()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition flex items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-amber-300"></i>
+            <span>Click to Reveal Trick (उत्तर देखें)</span>
+          </button>
+        </div>
+        <div class="lg:col-span-6">
+          <div id="math-step-box" class="hidden bg-emerald-50 rounded-2xl p-6 border-2 border-emerald-400 space-y-3 font-mono text-sm">
+            <p class="font-bold text-emerald-900 font-sans">Step 1: Round 48 to 50 by borrowing 2 from 37 (48 + 2 = 50).</p>
+            <p class="font-bold text-emerald-900 font-sans">Step 2: Remaining from 37 is 35 (37 - 2 = 35).</p>
+            <p class="p-3 bg-white rounded-xl text-emerald-950 font-bold text-base font-sans">
+              Final Answer: 50 + 35 = 85! Solved in 2 seconds!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Science -->
+      <div id="study-content-science" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-6 sm:p-10 border border-emerald-100 shadow-md">
+        <div class="lg:col-span-12 text-center space-y-3">
+          <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">Photosynthesis (प्रकाश संश्लेषण)</span>
+          <h3 class="text-2xl font-extrabold text-slate-900">How Plants Prepare Food</h3>
+          <p class="text-slate-600 text-sm max-w-xl mx-auto">
+            Bilingual formula: Carbon Dioxide (CO₂) + Water (H₂O) + Sunlight ➔ Glucose + Oxygen (O₂)
+          </p>
+          <div class="p-4 bg-emerald-50 rounded-xl font-mono text-base font-bold text-emerald-900 max-w-md mx-auto">
+            CO₂ + H₂O + Sunlight ➔ Glucose + O₂
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: English -->
+      <div id="study-content-english" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-6 sm:p-10 border border-sky-100 shadow-md">
+        <div class="lg:col-span-12 text-center space-y-4">
+          <span class="text-xs font-bold text-sky-700 bg-sky-100 px-3 py-1 rounded-full">Nursery & KG Early Phonics</span>
+          <h3 class="text-2xl font-extrabold text-slate-900">Letter Sound Blending</h3>
+          <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
+            <div class="p-4 bg-sky-50 rounded-xl border border-sky-100">
+              <p class="text-2xl">🍎</p>
+              <p class="font-bold text-sm mt-1">/æ/ Apple</p>
+            </div>
+            <div class="p-4 bg-sky-50 rounded-xl border border-sky-100">
+              <p class="text-2xl">🐱</p>
+              <p class="font-bold text-sm mt-1">/k/ Cat</p>
+            </div>
+            <div class="p-4 bg-sky-50 rounded-xl border border-sky-100">
+              <p class="text-2xl">☀️</p>
+              <p class="font-bold text-sm mt-1">/s/ Sun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 4: Hindi -->
+      <div id="study-content-hindi" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-6 sm:p-10 border border-amber-100 shadow-md">
+        <div class="lg:col-span-12 text-center space-y-4">
+          <span class="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-full">UP Board व्याकरण</span>
+          <h3 class="text-2xl font-extrabold text-slate-900">संधि विच्छेद नियम</h3>
+          <div class="p-4 bg-amber-50 rounded-2xl max-w-md mx-auto space-y-2 text-sm text-left">
+            <p><strong>1. दीर्घ स्वर संधि:</strong> विद्या + आलय = <strong>विद्यालय</strong></p>
+            <p><strong>2. गुण स्वर संधि:</strong> नर + ईश = <strong>नरेश</strong></p>
+            <p><strong>3. सूर्योदय:</strong> सूर्य + उदय = <strong>सूर्योदय</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- CONTACT & ADMISSIONS SECTION -->
+  <!-- ========================================== -->
+  <section id="contact-admissions" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>Direct WhatsApp & Call Helpline</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
+            Call or WhatsApp for Complete Information
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            Contact our center directly at <strong class="text-slate-900">9810650542</strong> to know fees, batch timings, and seat availability.
+          </p>
+
+          <div class="p-5 rounded-2xl bg-emerald-600 text-white shadow-lg space-y-3">
+            <p class="text-xs uppercase tracking-wider font-semibold text-emerald-100">Official Helpline</p>
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="text-2xl font-black text-white hover:underline flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-2xl"></i>
+                <span>9810650542</span>
+              </a>
+              <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="px-4 py-2 bg-white text-emerald-800 font-extrabold text-xs rounded-xl shadow-xs">
+                Open WhatsApp
+              </a>
+            </div>
+            <div class="pt-2 border-t border-emerald-500/60 flex items-center justify-between text-xs text-emerald-100">
+              <span>Calling: +91 9810650542</span>
+              <a href="tel:+919810650542" class="text-white font-bold hover:underline">Tap to Call</a>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <p class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-purple-600"></i> Center Location
+            </p>
+            <p class="text-xs text-slate-700 mt-1">Near Shagun Junior High School, New Kot Gaon, Ghaziabad</p>
+          </div>
+        </div>
+
+        <!-- Callback Form -->
+        <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-xl">
+          <form onsubmit="handleAdmissionsForm(event)" class="space-y-4">
+            <h3 class="text-xl font-bold text-slate-900">Request An Immediate Information Call</h3>
+            <p class="text-xs text-slate-500">Enter your details and our teacher will call you shortly.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Child's Name *</label>
+                <input type="text" required placeholder="Aarav Sharma" class="w-full px-3.5 py-2.5 text-base rounded-xl border border-slate-200 bg-slate-50/50" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Parent's Name *</label>
+                <input type="text" id="form-parent-name" required placeholder="Dr. Sunita Sharma" class="w-full px-3.5 py-2.5 text-base rounded-xl border border-slate-200 bg-slate-50/50" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number (WhatsApp) *</label>
+                <input type="tel" id="form-phone-num" required pattern="[0-9]{10}" placeholder="98106 50542" class="w-full px-3.5 py-2.5 text-base rounded-xl border border-slate-200 bg-slate-50/50" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Select Class *</label>
+                <select class="w-full px-3.5 py-2.5 text-base rounded-xl border border-slate-200 bg-slate-50/50">
+                  <option>Nursery / KG</option>
+                  <option>Class 1st to 3rd</option>
+                  <option>Class 4th & 5th</option>
+                  <option>Class 6th to 8th</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-purple-600 hover:bg-purple-700 text-white shadow-md transition cursor-pointer">
+              Submit Callback Request
+            </button>
+            <p id="form-success-msg" class="hidden text-xs text-emerald-700 font-bold text-center bg-emerald-50 p-3 rounded-xl">
+              धन्यवाद! आपकी रिक्वेस्ट दर्ज कर ली गई है। हम शीघ्र ही संपर्क करेंगे।
+            </p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- FOOTER -->
+  <!-- ========================================== -->
+  <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="flex items-center justify-center gap-2">
+        <span class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </span>
+        <span class="font-extrabold text-white text-base">Lalita Coaching Classes</span>
+      </div>
+      <p class="text-slate-400">Near Shagun Junior High School, New Kot Gaon, Ghaziabad · WhatsApp: 9810650542</p>
+      <p class="pt-4 border-t border-slate-800 text-slate-500">
+        © 2026 Lalita Coaching Classes. Developed by <strong class="text-amber-400 font-bold">Vishal Mathur</strong>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <!-- ========================================== -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-2.5">
+    <a href="https://wa.me/919810650542" target="_blank" rel="noreferrer" class="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-2xl transition" title="Chat on WhatsApp (9810650542)">
+      <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- VANILLA JAVASCRIPT LOGIC (STANDALONE) -->
+  <!-- ========================================== -->
+  <script>
+    let currentOtp = "7492";
+    let slogans = [
+      { text: "शिक्षा वह शेरनी का दूध है जो पिएगा वो दहाड़ेगा!", author: "डॉ. बी.आर. अम्बेडकर" },
+      { text: "स्मार्ट सीखो, आगे बढ़ो — मजबूत नींव ही बनाती है उज्ज्वल भविष्य!", author: "ललित कोचिंग सूत्र" },
+      { text: "कलम की ताकत से बदलें बच्चे का भाग्य — हर पाठ आसान, हर सवाल हल!", author: "सफलता का मंत्र" },
+      { text: "रटने से आजादी, समझने की शक्ति — खेल-खेल में सीखें कठिन से कठिन विषय!", author: "NCERT & UP Board" },
+      { text: "पढ़ेगा बचपन, निखरेगा कल — हर बच्चे में छुपा है एक अव्वल सितारा!", author: "न्यू कोट गांव, ग़ाज़ियाबाद" }
+    ];
+    let sloganIdx = 0;
+
+    // Check localStorage login
+    window.onload = function() {
+      const savedUser = localStorage.getItem('lalita_coaching_user');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          applyLoggedInState(user);
+        } catch (e) {}
+      }
+      setInterval(nextSlogan, 4500);
+    };
+
+    function applyLoggedInState(user) {
+      document.getElementById('auth-modal').classList.add('hidden');
+      document.getElementById('modal-close-btn').classList.remove('hidden');
+      document.getElementById('login-open-btn').classList.add('hidden');
+      document.getElementById('user-profile-badge').classList.remove('hidden');
+      document.getElementById('user-badge-name').innerText = user.name || 'Parent';
+      if (document.getElementById('form-parent-name')) {
+        document.getElementById('form-parent-name').value = user.name || '';
+      }
+      if (document.getElementById('form-phone-num') && user.phone) {
+        document.getElementById('form-phone-num').value = user.phone;
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      document.getElementById('auth-panel-phone').classList.add('hidden');
+      document.getElementById('auth-panel-google').classList.add('hidden');
+      document.getElementById('auth-panel-facebook').classList.add('hidden');
+      
+      document.getElementById('tab-phone-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600";
+      document.getElementById('tab-google-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600";
+      document.getElementById('tab-facebook-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 text-slate-600";
+
+      if (tab === 'phone') {
+        document.getElementById('auth-panel-phone').classList.remove('hidden');
+        document.getElementById('tab-phone-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-purple-700 shadow-xs";
+      } else if (tab === 'google') {
+        document.getElementById('auth-panel-google').classList.remove('hidden');
+        document.getElementById('tab-google-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-purple-700 shadow-xs";
+      } else {
+        document.getElementById('auth-panel-facebook').classList.remove('hidden');
+        document.getElementById('tab-facebook-btn').className = "flex-1 py-2 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 bg-white text-purple-700 shadow-xs";
+      }
+    }
+
+    function handleSendOtp(e) {
+      e.preventDefault();
+      const phone = document.getElementById('phone-num-input').value.replace(/\D/g, '');
+      if (phone.length < 10) {
+        alert('कृपया 10 अंकों का फोन नंबर डालें');
+        return;
+      }
+      currentOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      document.getElementById('toast-otp-code').innerText = currentOtp;
+      document.getElementById('otp-toast').classList.remove('hidden');
+      document.getElementById('display-sent-phone').innerText = "+91 " + phone;
+      document.getElementById('phone-step-1').classList.add('hidden');
+      document.getElementById('phone-step-2').classList.remove('hidden');
+    }
+
+    function autoFillOtp() {
+      document.getElementById('otp-input-field').value = currentOtp;
+      dismissOtpToast();
+    }
+
+    function dismissOtpToast() {
+      document.getElementById('otp-toast').classList.add('hidden');
+    }
+
+    function backToPhoneStep1() {
+      document.getElementById('phone-step-1').classList.remove('hidden');
+      document.getElementById('phone-step-2').classList.add('hidden');
+    }
+
+    function handleVerifyOtp(e) {
+      e.preventDefault();
+      const entered = document.getElementById('otp-input-field').value.trim();
+      if (entered !== currentOtp) {
+        alert('गलत ओटीपी है! सही कोड दर्ज करें।');
+        return;
+      }
+      const name = document.getElementById('phone-name-input').value.trim() || 'Parent User';
+      const phone = document.getElementById('phone-num-input').value;
+      const user = { name: name, phone: phone, method: 'phone' };
+      localStorage.setItem('lalita_coaching_user', JSON.stringify(user));
+      applyLoggedInState(user);
+    }
+
+    function toggleGoogleCustom(isCustom) {
+      const box = document.getElementById('google-custom-box');
+      if (isCustom) box.classList.remove('hidden');
+      else box.classList.add('hidden');
+    }
+
+    function handleGoogleLogin(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="google-radio"]:checked').value;
+      let name = "Vishal Mathur";
+      let email = selected;
+      if (selected === 'custom') {
+        email = document.getElementById('google-custom-email').value;
+        name = document.getElementById('google-custom-name').value || email.split('@')[0];
+      } else if (selected.includes('priya')) {
+        name = "Priya Sharma";
+      }
+      const user = { name: name, email: email, method: 'google' };
+      localStorage.setItem('lalita_coaching_user', JSON.stringify(user));
+      applyLoggedInState(user);
+    }
+
+    function toggleFacebookCustom(isCustom) {
+      const box = document.getElementById('fb-custom-box');
+      if (isCustom) box.classList.remove('hidden');
+      else box.classList.add('hidden');
+    }
+
+    function handleFacebookLogin(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="fb-radio"]:checked').value;
+      let name = "Vishal Mathur";
+      if (selected === 'custom') {
+        name = document.getElementById('fb-custom-name').value || 'Facebook Parent';
+      }
+      const user = { name: name, method: 'facebook' };
+      localStorage.setItem('lalita_coaching_user', JSON.stringify(user));
+      applyLoggedInState(user);
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('lalita_coaching_user');
+      location.reload();
+    }
+
+    function toggleMobileMenu() {
+      const m = document.getElementById('mobile-menu');
+      m.classList.toggle('hidden');
+    }
+
+    function nextSlogan() {
+      sloganIdx = (sloganIdx + 1) % slogans.length;
+      updateSloganText();
+    }
+
+    function prevSlogan() {
+      sloganIdx = (sloganIdx - 1 + slogans.length) % slogans.length;
+      updateSloganText();
+    }
+
+    function updateSloganText() {
+      const s = slogans[sloganIdx];
+      document.getElementById('slogan-display').innerHTML = `
+        <i class="fa-solid fa-quote-left text-amber-400 text-xs"></i>
+        <span>${s.text}</span>
+        <span class="text-amber-300 font-bold">— ${s.author}</span>
+      `;
+    }
+
+    function switchStudyTab(tab) {
+      const tabs = ['math', 'science', 'english', 'hindi'];
+      tabs.forEach(t => {
+        document.getElementById('study-content-' + t).classList.add('hidden');
+        document.getElementById('study-tab-' + t).className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-slate-700 hover:bg-slate-100 border";
+      });
+      document.getElementById('study-content-' + tab).classList.remove('hidden');
+      document.getElementById('study-tab-' + tab).className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 text-white shadow-md";
+    }
+
+    function toggleMathStep() {
+      const b = document.getElementById('math-step-box');
+      b.classList.toggle('hidden');
+    }
+
+    function handleAdmissionsForm(e) {
+      e.preventDefault();
+      document.getElementById('form-success-msg').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
